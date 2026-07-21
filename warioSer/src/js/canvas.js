@@ -42,13 +42,11 @@ class Player {
 
     if (this.position.y + this.height + this.velocity.y <= canvas.height) {
       this.velocity.y += gravity
-    } else {
-      this.velocity.y = 0
     }
   }
 }
 class Platform {
-  constructor({ x, y, image}) {
+  constructor({ x, y, image }) {
     this.position = {
       x,
       y
@@ -56,7 +54,7 @@ class Platform {
     this.image = image
     this.width = this.image.width
     this.height = this.image.height
-    
+
   }
 
   draw() {
@@ -66,7 +64,7 @@ class Platform {
 
 //like scenery and stuff
 class GenericObject {
-  constructor({ x, y, image}) {
+  constructor({ x, y, image }) {
     this.position = {
       x,
       y
@@ -74,7 +72,7 @@ class GenericObject {
     this.image = image
     this.width = this.image.width
     this.height = this.image.height
-    
+
   }
 
   draw() {
@@ -85,45 +83,77 @@ class GenericObject {
 
 function createImage(imageSrc) {
   const image = new Image()
-  image.src = imageSrc  
+  image.src = imageSrc
   return image
 }
 
-const platformImage = createImage(platform)
 
-const player = new Player()
-const platforms = [new Platform({
-  x: -1, 
-  y: 470 , 
-  image: platformImage
-}), 
-new Platform({ x: platformImage.width-3, y: 470, image: platformImage })]
+let platformImage = createImage(platform)
 
-const genericObjects = [
-  new GenericObject({
+  let player = new Player()
+  let platforms = [new Platform({
     x: -1,
-    y: -1,
-    image: createImage(background)
+    y: 470,
+    image: platformImage
   }),
-  new GenericObject({
-    x: -1,
-    y: -1,
-    image: createImage(hills)
-  })
-]
+  new Platform({ x: platformImage.width - 3, y: 470, image: platformImage }),
+  new Platform({ x: platformImage.width * 2 + 100, y: 470, image: platformImage })]
+
+  let genericObjects = [
+    new GenericObject({
+      x: -1,
+      y: -1,
+      image: createImage(background)
+    }),
+    new GenericObject({
+      x: -1,
+      y: -1,
+      image: createImage(hills)
+    })
+  ]
 
 
-const keys = {
-  right: {
-    pressed: false
-  },
-  left: {
-    pressed: false
+  const keys = {
+    right: {
+      pressed: false
+    },
+    left: {
+      pressed: false
+    }
   }
-}
 
-//how far player moved
-let scrollOffset = 0
+  //how far player moved
+  let scrollOffset = 0
+
+
+function init() {
+   platformImage = createImage(platform)
+
+   player = new Player()
+   platforms = [new Platform({
+    x: -1,
+    y: 470,
+    image: platformImage
+  }),
+  new Platform({ x: platformImage.width - 3, y: 470, image: platformImage }),
+  new Platform({ x: platformImage.width * 2 + 100, y: 470, image: platformImage })]
+
+   genericObjects = [
+    new GenericObject({
+      x: -1,
+      y: -1,
+      image: createImage(background)
+    }),
+    new GenericObject({
+      x: -1,
+      y: -1,
+      image: createImage(hills)
+    })
+  ]
+
+  //how far player moved
+  scrollOffset = 0
+}
 
 player.draw()
 
@@ -135,14 +165,14 @@ function animate() {
   genericObjects.forEach(genericObject => {
     genericObject.draw()
   })
-  
+
   platforms.forEach(platform => {
     platform.draw()
   })
 
   player.update()
 
-  
+
 
   if (keys.right.pressed && player.position.x < 400) {
     player.velocity.x = 5
@@ -180,6 +210,11 @@ function animate() {
 
   if (scrollOffset > 2000) {
     console.log('you win')
+  }
+
+  if (player.position.y > canvas.height) {
+    console.log('YOU LOSE')
+    init()
   }
 }
 animate()

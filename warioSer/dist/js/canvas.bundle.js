@@ -184,8 +184,6 @@ var Player = /*#__PURE__*/function () {
       this.position.x += this.velocity.x;
       if (this.position.y + this.height + this.velocity.y <= canvas.height) {
         this.velocity.y += gravity;
-      } else {
-        this.velocity.y = 0;
       }
     }
   }]);
@@ -250,6 +248,10 @@ var platforms = [new Platform({
   x: platformImage.width - 3,
   y: 470,
   image: platformImage
+}), new Platform({
+  x: platformImage.width * 2 + 100,
+  y: 470,
+  image: platformImage
 })];
 var genericObjects = [new GenericObject({
   x: -1,
@@ -271,6 +273,35 @@ var keys = {
 
 //how far player moved
 var scrollOffset = 0;
+function init() {
+  platformImage = createImage(_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
+  player = new Player();
+  platforms = [new Platform({
+    x: -1,
+    y: 470,
+    image: platformImage
+  }), new Platform({
+    x: platformImage.width - 3,
+    y: 470,
+    image: platformImage
+  }), new Platform({
+    x: platformImage.width * 2 + 100,
+    y: 470,
+    image: platformImage
+  })];
+  genericObjects = [new GenericObject({
+    x: -1,
+    y: -1,
+    image: createImage(_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])
+  }), new GenericObject({
+    x: -1,
+    y: -1,
+    image: createImage(_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
+  })];
+
+  //how far player moved
+  scrollOffset = 0;
+}
 player.draw();
 function animate() {
   requestAnimationFrame(animate);
@@ -315,6 +346,10 @@ function animate() {
   });
   if (scrollOffset > 2000) {
     console.log('you win');
+  }
+  if (player.position.y > canvas.height) {
+    console.log('YOU LOSE');
+    init();
   }
 }
 animate();
