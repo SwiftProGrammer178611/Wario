@@ -2,6 +2,34 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./background.png":
+/*!************************!*\
+  !*** ./background.png ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "072d51bcc9c09311d4c2a6708b05bddc.png");
+
+/***/ }),
+
+/***/ "./hills.png":
+/*!*******************!*\
+  !*** ./hills.png ***!
+  \*******************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "cfffe4c371f5e11d372b398a87c51dd0.png");
+
+/***/ }),
+
 /***/ "./platform.png":
 /*!**********************!*\
   !*** ./platform.png ***!
@@ -113,9 +141,13 @@ var __webpack_exports__ = {};
   \**************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _platform_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../../../platform.png */ "./platform.png");
+/* harmony import */ var _hills_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../../../hills.png */ "./hills.png");
+/* harmony import */ var _background_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../../background.png */ "./background.png");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
 
 console.log(_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
 var canvas = document.querySelector('canvas');
@@ -180,18 +212,53 @@ var Platform = /*#__PURE__*/function () {
     }
   }]);
   return Platform;
+}(); //like scenery and stuff
+var GenericObject = /*#__PURE__*/function () {
+  function GenericObject(_ref2) {
+    var x = _ref2.x,
+      y = _ref2.y,
+      image = _ref2.image;
+    _classCallCheck(this, GenericObject);
+    this.position = {
+      x: x,
+      y: y
+    };
+    this.image = image;
+    this.width = this.image.width;
+    this.height = this.image.height;
+  }
+  _createClass(GenericObject, [{
+    key: "draw",
+    value: function draw() {
+      c.drawImage(this.image, this.position.x, this.position.y);
+    }
+  }]);
+  return GenericObject;
 }();
-var image = new Image();
-image.src = _platform_png__WEBPACK_IMPORTED_MODULE_0__["default"];
+function createImage(imageSrc) {
+  var image = new Image();
+  image.src = imageSrc;
+  return image;
+}
+var platformImage = createImage(_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
 var player = new Player();
 var platforms = [new Platform({
   x: -1,
   y: 470,
-  image: image
+  image: platformImage
 }), new Platform({
-  x: image.width - 3,
+  x: platformImage.width - 3,
   y: 470,
-  image: image
+  image: platformImage
+})];
+var genericObjects = [new GenericObject({
+  x: -1,
+  y: -1,
+  image: createImage(_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])
+}), new GenericObject({
+  x: -1,
+  y: -1,
+  image: createImage(_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
 })];
 var keys = {
   right: {
@@ -209,6 +276,9 @@ function animate() {
   requestAnimationFrame(animate);
   c.fillStyle = 'white';
   c.fillRect(0, 0, canvas.width, canvas.height);
+  genericObjects.forEach(function (genericObject) {
+    genericObject.draw();
+  });
   platforms.forEach(function (platform) {
     platform.draw();
   });
@@ -224,10 +294,16 @@ function animate() {
       platforms.forEach(function (platform) {
         platform.position.x -= 5;
       });
+      genericObjects.forEach(function (genericObject) {
+        genericObject.position.x -= 3;
+      });
     } else if (keys.left.pressed) {
       platforms.forEach(function (platform) {
         platform.draw();
         platform.position.x += 5;
+      });
+      genericObjects.forEach(function (genericObject) {
+        genericObject.position.x += 3;
       });
     }
   }
@@ -242,8 +318,8 @@ function animate() {
   }
 }
 animate();
-addEventListener('keydown', function (_ref2) {
-  var keyCode = _ref2.keyCode;
+addEventListener('keydown', function (_ref3) {
+  var keyCode = _ref3.keyCode;
   console.log(keyCode);
   switch (keyCode) {
     case 65:
@@ -263,8 +339,8 @@ addEventListener('keydown', function (_ref2) {
       break;
   }
 });
-addEventListener('keyup', function (_ref3) {
-  var keyCode = _ref3.keyCode;
+addEventListener('keyup', function (_ref4) {
+  var keyCode = _ref4.keyCode;
   console.log(keyCode);
   switch (keyCode) {
     case 65:
